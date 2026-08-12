@@ -1,15 +1,15 @@
 # Incident Report: SOC Operating With Alarm Notifications Muted Due to Chronic False-Positive Volume
 
-**Status:** Draft
+**Status:** In Review
 **Date of incident:** Condition discovered April 2026; duration prior to discovery unknown
-**Author:** [Author name]
-**Severity:** SEV2 — site monitoring effectively degraded for an extended, unmeasured period
+**Author:** CA
+**Severity:** SEV2 - site monitoring effectively degraded for an extended, unmeasured period
 
 ---
 
 ## Summary
 
-During an unstructured review of surveillance and access-control systems in April 2026, alarm notifications were found to be muted at SOC operator workstations — a response to sustained alarm volume of 700+ per day (~30/hour, roughly one every two minutes), the majority of it false positives from untuned video analytics and access-control thresholds. A muted SOC is functionally an unmonitored SOC: for an unknown period, the site had camera coverage but no reliable alerting on it. Retuning the analytics — tightening detection zones, retraining object classification, and rerouting non-critical events to silent logging — reduced volume to 50+ per day (~1/hour). Notifications can now be run un-muted.
+During an unstructured review of surveillance and access-control systems in April 2026, alarm notifications were found to be muted at SOC operator workstations, a response to sustained alarm volume of 700+ per day (~30/hour, roughly one every two minutes), the majority of it false positives from untuned video analytics and access-control thresholds. A muted SOC is functionally an unmonitored SOC: for an unknown period, the site had camera coverage but no reliable alerting on it. Retuning the analytics: tightening detection zones, retraining object classification, and rerouting non-critical events to silent logging, reduced volume to 50+ per day (~1/hour). Notifications can now be run un-muted.
 
 ---
 
@@ -55,7 +55,7 @@ Three contributing layers:
 
 **3. No alarm-volume metric.** Volume was not tracked, so there was no number to escalate, no threshold that triggered action, and no record of when the condition began. 700 alarms per day persisted indefinitely because nothing in the process was capable of noticing it.
 
-Layer 1 explains the false positives. Layers 2 and 3 explain why they went unaddressed for an unknown length of time — and those are the ones that generalise to every other site and install.
+Layer 1 explains the false positives. Layers 2 and 3 explain why they went unaddressed for an unknown length of time, and those are the ones that generalise to every other site and install.
 
 ---
 
@@ -68,7 +68,7 @@ Layer 1 explains the false positives. Layers 2 and 3 explain why they went unadd
 - **Scoped person-only classification to office areas.** Alerting is filtered to people within the offices. The factory floor retains full detection including vehicles, where vehicle presence remains a legitimate event
 - **Rerouted non-critical events to silent historical logging.** Removed from pop-up and audible notification; still recorded and available for review
 
-**Result:** alarm volume reduced from 700+/day to 50+/day, and from ~30/hour to ~1/hour — roughly a 93% reduction. At approximately one alarm per hour, notifications are viable un-muted and genuinely unusual activity is distinguishable from background.
+**Result:** alarm volume reduced from 700+/day to 50+/day, and from ~30/hour to ~1/hour, roughly a 93% reduction. At approximately one alarm per hour, notifications are viable un-muted and genuinely unusual activity is distinguishable from background.
 
 ---
 
