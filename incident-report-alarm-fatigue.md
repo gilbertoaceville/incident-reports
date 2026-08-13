@@ -41,9 +41,33 @@ During an unstructured review of surveillance and access-control systems in Apri
 - **Data loss or corruption:** None. Events continued to be recorded to historical logs throughout; only active notification was suppressed
 - **Nature of exposure:** Detection capability was intact; alerting was not. The site retained forensic (after-the-fact) coverage but lost effective real-time response for the duration
 
+### Cost
+
+**Risk exposure.** For an unknown period, 50+ cameras and ~16 doors had no reliable real-time alerting. Door Forced Open — the alarm type of greatest security consequence — was subject to the same suppression as the false positives that caused it. The site could reconstruct events after the fact but could not respond to them as they happened.
+
+**Operator time lost to noise.** At 700+ alarms/day, every alarm acknowledged and dismissed carries a time cost across the SOC:
+
+| Per-alarm handling time | Before (700/day) | After (50/day) | Recovered |
+|---|---|---|---|
+| 15 seconds | ~2.9 hrs/day | ~12 min/day | ~2.7 hrs/day (~985 hrs/yr) |
+| 30 seconds | ~5.8 hrs/day | ~25 min/day | ~5.4 hrs/day (~1,970 hrs/yr) |
+| **[TBD — measured]** | **[TBD]** | **[TBD]** | **[TBD]** |
+
+The 15- and 30-second rows are illustrative brackets, not measurements. Replace with an observed per-alarm handling time before citing externally. Even the conservative bracket puts the annual cost of the untuned configuration in the high hundreds of operator-hours.
+
+**Cost to remediate.** [TBD — approximate effort for the review, retune, and classifier retraining]. This figure against the recovered hours above is the return on the work.
+
 ---
 
 ## Root Cause
+
+### What was assumed
+
+The alarm volume was treated as a property of the equipment rather than of its configuration — the working assumption being that the cameras were over-sensitive or the system simply noisy by nature, and that this was the normal operating condition for a site of this size. Door Held Open, the top recurring alarm, read as a door or user-behaviour problem.
+
+Neither held. The cameras were functioning correctly and the doors were being used normally. Every significant source of noise traced to configuration values that had never been set for this site. This distinction matters beyond the incident: the assumed cause points toward replacing hardware or accepting the noise, and neither would have worked.
+
+### What actually caused it
 
 The trigger for the muted state was alarm volume. The root cause is that nothing in the system's design or operation was responsible for keeping that volume survivable.
 
@@ -74,14 +98,18 @@ Layer 1 explains the false positives. Layers 2 and 3 explain why they went unadd
 
 ## Remediation
 
-| # | Action item | Owner | Status | Due date |
-|---|-------------|-------|--------|----------|
-| 1 | Confirm notifications un-muted on all 6 operator workstations; verify they remain on at follow-up | [TBD] | Not started | [TBD] |
-| 2 | Extend Door Held Open threshold from 15s to 45–60s on high-traffic doors | [TBD] | Not started | [TBD] |
-| 3 | Retrospectively review Door Forced Open events during the muted period to establish whether real events were missed; close out the "unknown" in Impact | [TBD] | Not started | [TBD] |
-| 4 | Walk-test tightened detection zones to confirm no coverage gaps were introduced by the exclusions | [TBD] | Not started | [TBD] |
-| 5 | Add analytics tuning and an alarm-volume acceptance check to the commissioning checklist, so no camera or door goes live on defaults | [TBD] | Not started | [TBD] |
-| 6 | Assign a named owner for monthly alarm-volume review, with a defined threshold that triggers retuning (proposed: >100/day) | [TBD] | Not started | [TBD] |
-| 7 | Review OnGuard permissions so operators can flag or escalate alarm noise even where they cannot change configuration themselves | [TBD] | Not started | [TBD] |
+**The preventive control is item 5.** Tuning analytics and alarm thresholds at commissioning, before a camera or door goes live, is the one action that would have prevented this condition entirely. Item 6 is detective — it would not have prevented the noise but would have surfaced it within weeks rather than an unknown period. Item 7 shortens the path from noticing to acting. Items 1–4 close out this instance only and do not generalise.
+
+If only one item is resourced, it should be item 5.
+
+| # | Action item | Type | Owner | Status | Due date |
+|---|-------------|------|-------|--------|----------|
+| 5 | Add analytics tuning and an alarm-volume acceptance check to the commissioning checklist, so no camera or door goes live on defaults | **Preventive** | [TBD] | Not started | [TBD] |
+| 6 | Assign a named owner for monthly alarm-volume review, with a defined threshold that triggers retuning (proposed: >100/day) | Detective | [TBD] | Not started | [TBD] |
+| 7 | Review OnGuard permissions so operators can flag or escalate alarm noise even where they cannot change configuration themselves | Escalation | [TBD] | Not started | [TBD] |
+| 1 | Confirm notifications un-muted on all 6 operator workstations; verify they remain on at follow-up | Cleanup | [TBD] | Not started | [TBD] |
+| 2 | Extend Door Held Open threshold from 15s to 45–60s on high-traffic doors | Cleanup | [TBD] | Not started | [TBD] |
+| 3 | Retrospectively review Door Forced Open events during the muted period to establish whether real events were missed; close out the "unknown" in Impact | Cleanup | [TBD] | Not started | [TBD] |
+| 4 | Walk-test tightened detection zones to confirm no coverage gaps were introduced by the exclusions | Cleanup | [TBD] | Not started | [TBD] |
 
 **Done-condition for this incident:** items 1–3 closed, and one month of volume data showing sustained ≤100 alarms/day with notifications un-muted.
